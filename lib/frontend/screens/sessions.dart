@@ -266,22 +266,13 @@ class SessionsScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Row(
         children: [
-          // Session number badge
+          // Session dot
           Container(
-            width: 32,
-            height: 32,
+            width: 10,
+            height: 10,
             decoration: BoxDecoration(
-              color: AppTheme.primary.withValues(alpha: 0.1),
+              color: AppTheme.primary,
               shape: BoxShape.circle,
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              '$index',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-                color: AppTheme.primary,
-              ),
             ),
           ),
           const SizedBox(width: 12),
