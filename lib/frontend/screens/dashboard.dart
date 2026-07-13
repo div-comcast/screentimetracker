@@ -5,6 +5,7 @@ import '../widgets/usage_kpi.dart';
 import '../widgets/topbar_section.dart';
 import '../widgets/appusage_tiles.dart';
 import 'sessions.dart';
+import 'timeline.dart';
 
 /// Main dashboard screen — assembles all widgets matching the design.
 class DashboardScreen extends StatefulWidget {
@@ -47,7 +48,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
             SliverToBoxAdapter(
               child: TabBarSection(
                 selectedIndex: _selectedTab,
-                onTabChanged: (i) => setState(() => _selectedTab = i),
+                onTabChanged: (i) {
+                  if (i == 2) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const TimelineScreen()),
+                    );
+                  } else {
+                    setState(() => _selectedTab = i);
+                  }
+                },
               ),
             ),
 

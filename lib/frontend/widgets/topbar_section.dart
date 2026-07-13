@@ -12,7 +12,7 @@ class TabBarSection extends StatelessWidget {
     required this.onTabChanged,
   });
 
-  static const _labels = ['All Apps', 'By Category', 'Time Trend'];
+  static const _labels = ['All Apps', 'By Category', 'Timeline'];
 
   @override
   Widget build(BuildContext context) {
