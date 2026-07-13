@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
 import 'screens/dashboard.dart';
-import 'widgets/bottom_nav_bar.dart';
+import 'widgets/bottom_navbar.dart';
 
 /// Root widget — holds the bottom nav and swaps screens.
 class ScreenTimeApp extends StatelessWidget {

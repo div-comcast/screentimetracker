@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../data/dummy_data.dart';
 import '../theme/app_theme.dart';
-import '../widgets/usage_summary_card.dart';
-import '../widgets/tab_bar_section.dart';
-import '../widgets/app_usage_tile.dart';
+import '../widgets/usage_kpi.dart';
+import '../widgets/topbar_section.dart';
+import '../widgets/appusage_tiles.dart';
+import 'sessions.dart';
 
 /// Main dashboard screen — assembles all widgets matching the design.
 class DashboardScreen extends StatefulWidget {
@@ -58,7 +59,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
             // ── App List ─────────────────────────────────────────
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) => AppUsageTile(app: dummyApps[index]),
+                (context, index) => AppUsageTile(
+                  app: dummyApps[index],
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => SessionsScreen(app: dummyApps[index]),
+                      ),
+                    );
+                  },
+                ),
                 childCount: dummyApps.length,
               ),
             ),

@@ -15,23 +15,9 @@ class AppUsageTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-        padding: const EdgeInsets.all(14),
-        decoration: AppTheme.tileDecoration,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
-            // ── Rank ────────────────────────────────────────────
-            SizedBox(
-              width: 24,
-              child: Text(
-                '${app.rank}',
-                style: AppTheme.bodyMedium.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textMuted,
-                ),
-              ),
-            ),
-
             // ── App Icon ────────────────────────────────────────
             Container(
               width: 44,
