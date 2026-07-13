@@ -7,7 +7,7 @@ class TimelineScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final entries = _dummyTimelineEntries;
+    final entries = dummyTimelineEntries;
 
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBg,
@@ -40,7 +40,7 @@ class TimelineScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         itemCount: entries.length,
         itemBuilder: (context, index) {
-          return _TimelineTile(
+          return TimelineTile(
             entry: entries[index],
             isFirst: index == 0,
             isLast: index == entries.length - 1,
@@ -51,12 +51,13 @@ class TimelineScreen extends StatelessWidget {
   }
 }
 
-class _TimelineTile extends StatelessWidget {
-  final _TimelineEntry entry;
+class TimelineTile extends StatelessWidget {
+  final TimelineEntry entry;
   final bool isFirst;
   final bool isLast;
 
-  const _TimelineTile({
+  const TimelineTile({
+    super.key,
     required this.entry,
     required this.isFirst,
     required this.isLast,
@@ -182,7 +183,7 @@ class _TimelineTile extends StatelessWidget {
 
 // ─── Data model ──────────────────────────────────────────────────────────
 
-class _TimelineEntry {
+class TimelineEntry {
   final String timeLabel;
   final String appName;
   final IconData iconData;
@@ -191,7 +192,7 @@ class _TimelineEntry {
   final String endTime;
   final String duration;
 
-  const _TimelineEntry({
+  const TimelineEntry({
     required this.timeLabel,
     required this.appName,
     required this.iconData,
@@ -204,8 +205,8 @@ class _TimelineEntry {
 
 // ─── Dummy timeline data ─────────────────────────────────────────────────
 
-const _dummyTimelineEntries = [
-  _TimelineEntry(
+const dummyTimelineEntries = [
+  TimelineEntry(
     timeLabel: '03:27 AM',
     appName: 'Chrome',
     iconData: Icons.language,
@@ -214,7 +215,7 @@ const _dummyTimelineEntries = [
     endTime: '03:27:34',
     duration: '15s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '07:55 AM',
     appName: 'Chrome',
     iconData: Icons.language,
@@ -223,7 +224,7 @@ const _dummyTimelineEntries = [
     endTime: '07:55:06',
     duration: '3s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '07:55 AM',
     appName: 'Cleaner',
     iconData: Icons.cleaning_services,
@@ -232,7 +233,7 @@ const _dummyTimelineEntries = [
     endTime: '07:55:20',
     duration: '14s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '07:55 AM',
     appName: 'LinkedIn',
     iconData: Icons.work,
@@ -241,7 +242,7 @@ const _dummyTimelineEntries = [
     endTime: '07:55:47',
     duration: '19s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '07:59 AM',
     appName: 'LinkedIn',
     iconData: Icons.work,
@@ -250,7 +251,7 @@ const _dummyTimelineEntries = [
     endTime: '07:59:22',
     duration: '6s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '07:59 AM',
     appName: 'Instagram',
     iconData: Icons.camera_alt,
@@ -259,7 +260,7 @@ const _dummyTimelineEntries = [
     endTime: '08:01:29',
     duration: '2m 5s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '08:03 AM',
     appName: 'Calculator',
     iconData: Icons.calculate,
@@ -268,7 +269,7 @@ const _dummyTimelineEntries = [
     endTime: '08:04:26',
     duration: '42s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '08:04 AM',
     appName: 'Instagram',
     iconData: Icons.camera_alt,
@@ -277,7 +278,7 @@ const _dummyTimelineEntries = [
     endTime: '08:08:34',
     duration: '4m 6s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '08:11 AM',
     appName: 'Instagram',
     iconData: Icons.camera_alt,
@@ -286,7 +287,7 @@ const _dummyTimelineEntries = [
     endTime: '08:15:56',
     duration: '4m 53s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '08:15 AM',
     appName: 'Chrome',
     iconData: Icons.language,
@@ -295,7 +296,7 @@ const _dummyTimelineEntries = [
     endTime: '08:16:05',
     duration: '6s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '08:16 AM',
     appName: 'Chrome',
     iconData: Icons.language,
@@ -304,7 +305,7 @@ const _dummyTimelineEntries = [
     endTime: '08:16:05',
     duration: '0s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '08:16 AM',
     appName: 'Chrome',
     iconData: Icons.language,
@@ -313,7 +314,7 @@ const _dummyTimelineEntries = [
     endTime: '08:16:11',
     duration: '6s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '08:16 AM',
     appName: 'Instagram',
     iconData: Icons.camera_alt,
@@ -322,7 +323,7 @@ const _dummyTimelineEntries = [
     endTime: '08:42:54',
     duration: '26m 42s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '08:42 AM',
     appName: 'Chrome',
     iconData: Icons.language,
@@ -331,7 +332,7 @@ const _dummyTimelineEntries = [
     endTime: '08:43:02',
     duration: '7s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '08:43 AM',
     appName: 'Chrome',
     iconData: Icons.language,
@@ -340,7 +341,7 @@ const _dummyTimelineEntries = [
     endTime: '08:43:02',
     duration: '0s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '08:43 AM',
     appName: 'Chrome',
     iconData: Icons.language,
@@ -349,7 +350,7 @@ const _dummyTimelineEntries = [
     endTime: '08:43:46',
     duration: '43s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '08:43 AM',
     appName: 'Google Play services',
     iconData: Icons.stars,
@@ -358,7 +359,7 @@ const _dummyTimelineEntries = [
     endTime: '08:43:48',
     duration: '2s',
   ),
-  _TimelineEntry(
+  TimelineEntry(
     timeLabel: '08:43 AM',
     appName: 'Google',
     iconData: Icons.search,

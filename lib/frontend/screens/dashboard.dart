@@ -48,41 +48,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
             SliverToBoxAdapter(
               child: TabBarSection(
                 selectedIndex: _selectedTab,
-                onTabChanged: (i) {
-                  if (i == 2) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const TimelineScreen()),
-                    );
-                  } else {
-                    setState(() => _selectedTab = i);
-                  }
-                },
+                onTabChanged: (i) => setState(() => _selectedTab = i),
               ),
             ),
 
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
 
-            // ── Sort Header ──────────────────────────────────────
-            SliverToBoxAdapter(child: _buildSortHeader()),
-
-            // ── App List ─────────────────────────────────────────
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => AppUsageTile(
-                  app: dummyApps[index],
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => SessionsScreen(app: dummyApps[index]),
-                      ),
-                    );
-                  },
+            // ── Content based on selected tab ────────────────────
+            if (_selectedTab == 2) ...[
+              // Timeline view
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => TimelineTile(
+                    entry: dummyTimelineEntries[index],
+                    isFirst: index == 0,
+                    isLast: index == dummyTimelineEntries.length - 1,
+                  ),
+                  childCount: dummyTimelineEntries.length,
                 ),
-                childCount: dummyApps.length,
               ),
-            ),
+            ] else ...[
+              // ── Sort Header ──────────────────────────────────────
+              SliverToBoxAdapter(child: _buildSortHeader()),
+
+              // ── App List ─────────────────────────────────────────
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => AppUsageTile(
+                    app: dummyApps[index],
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => SessionsScreen(app: dummyApps[index]),
+                        ),
+                      );
+                    },
+                  ),
+                  childCount: dummyApps.length,
+                ),
+              ),
+            ],
 
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
           ],
