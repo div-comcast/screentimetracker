@@ -24,12 +24,6 @@ class TimelineScreen extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined, color: AppTheme.textPrimary),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(vertical: 12),
