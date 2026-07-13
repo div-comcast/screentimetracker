@@ -1,56 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-/// Timeline screen showing the chronological activity of the entire day.
-class TimelineScreen extends StatelessWidget {
-  const TimelineScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final entries = dummyTimelineEntries;
-
-    return Scaffold(
-      backgroundColor: AppTheme.scaffoldBg,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: Navigator.canPop(context)
-            ? IconButton(
-                icon: const Icon(Icons.arrow_back, color: AppTheme.textPrimary),
-                onPressed: () => Navigator.pop(context),
-              )
-            : null,
-        centerTitle: true,
-        title: const Text(
-          'Timeline',
-          style: TextStyle(
-            color: AppTheme.textPrimary,
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined, color: AppTheme.textPrimary),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        itemCount: entries.length,
-        itemBuilder: (context, index) {
-          return TimelineTile(
-            entry: entries[index],
-            isFirst: index == 0,
-            isLast: index == entries.length - 1,
-          );
-        },
-      ),
-    );
-  }
-}
-
 class TimelineTile extends StatelessWidget {
   final TimelineEntry entry;
   final bool isFirst;
