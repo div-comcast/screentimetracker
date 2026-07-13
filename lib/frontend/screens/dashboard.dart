@@ -187,9 +187,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
-          const Icon(Icons.menu, color: AppTheme.textPrimary, size: 26),
           const Spacer(),
-          // Left arrow (shift range/day back by 1)
+          // Left arrow (shift day back by 1)
           IconButton(
             onPressed: _canGoBack
                 ? () => setState(() {
@@ -231,7 +230,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
           const SizedBox(width: 4),
-          // Right arrow (shift range/day forward by 1)
+          // Right arrow (shift day forward by 1)
           IconButton(
             onPressed: _canGoForward
                 ? () => setState(() {
@@ -246,22 +245,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
             constraints: const BoxConstraints(),
           ),
           const Spacer(),
-          // Calendar toggle
+          // Profile icon → opens settings
           GestureDetector(
-            onTap: () => setState(() => _showCalendar = !_showCalendar),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const _SettingsPage()),
+              );
+            },
             child: Container(
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: _showCalendar
-                    ? AppTheme.primary
-                    : AppTheme.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
+                color: AppTheme.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                Icons.calendar_today,
-                color: _showCalendar ? Colors.white : AppTheme.primary,
-                size: 20,
+              child: const Icon(
+                Icons.person_outline,
+                color: AppTheme.primary,
+                size: 22,
               ),
             ),
           ),
@@ -583,6 +585,97 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+// ─── Settings Page ──────────────────────────────────────────────────────
+
+class _SettingsPage extends StatelessWidget {
+  const _SettingsPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppTheme.scaffoldBg,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppTheme.textPrimary),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          'Settings',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: AppTheme.textPrimary,
+          ),
+        ),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        children: [
+          // Profile section
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: AppTheme.primary.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.person, color: AppTheme.primary, size: 26),
+                ),
+                const SizedBox(width: 14),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('User', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.textPrimary)),
+                      SizedBox(height: 2),
+                      Text('Manage your profile', style: TextStyle(fontSize: 13, color: AppTheme.textMuted)),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right, color: AppTheme.textMuted),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          _settingsTile(context, Icons.notifications_outlined, 'Notifications', 'Manage alerts & reminders'),
+          _settingsTile(context, Icons.palette_outlined, 'Appearance', 'Theme & display'),
+          _settingsTile(context, Icons.lock_outline, 'Privacy', 'Data & permissions'),
+          _settingsTile(context, Icons.storage_outlined, 'Data Management', 'Export, clear & backup'),
+          _settingsTile(context, Icons.info_outline, 'About', 'Version & licenses'),
+        ],
+      ),
+    );
+  }
+
+  Widget _settingsTile(BuildContext context, IconData icon, String title, String subtitle) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: ListTile(
+        leading: Icon(icon, color: AppTheme.primary, size: 22),
+        title: Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: AppTheme.textPrimary)),
+        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12, color: AppTheme.textMuted)),
+        trailing: const Icon(Icons.chevron_right, size: 20, color: AppTheme.textMuted),
+        onTap: () {},
+      ),
     );
   }
 }
