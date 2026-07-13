@@ -1,6 +1,51 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
+/// Standalone Timeline screen for the bottom nav.
+class TimelineScreen extends StatelessWidget {
+  const TimelineScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final entries = dummyTimelineEntries;
+
+    return Scaffold(
+      backgroundColor: AppTheme.scaffoldBg,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: const Text(
+          'Timeline',
+          style: TextStyle(
+            color: AppTheme.textPrimary,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined, color: AppTheme.textPrimary),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        itemCount: entries.length,
+        itemBuilder: (context, index) {
+          return TimelineTile(
+            entry: entries[index],
+            isFirst: index == 0,
+            isLast: index == entries.length - 1,
+          );
+        },
+      ),
+    );
+  }
+}
+
 class TimelineTile extends StatelessWidget {
   final TimelineEntry entry;
   final bool isFirst;
@@ -155,7 +200,7 @@ class TimelineEntry {
 
 // ─── Dummy timeline data ─────────────────────────────────────────────────
 
-const dummyTimelineEntries = [
+final dummyTimelineEntries = [
   TimelineEntry(
     timeLabel: '03:27 AM',
     appName: 'Chrome',

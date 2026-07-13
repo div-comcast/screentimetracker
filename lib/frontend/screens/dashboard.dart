@@ -5,7 +5,6 @@ import '../widgets/usage_kpi.dart';
 import '../widgets/topbar_section.dart';
 import '../widgets/appusage_tiles.dart';
 import 'sessions.dart';
-import 'timeline.dart';
 
 /// Main dashboard screen — assembles all widgets matching the design.
 class DashboardScreen extends StatefulWidget {
@@ -110,19 +109,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
 
             // ── Content based on selected tab ────────────────────
-            if (_selectedTab == 2) ...[
-              // Timeline view
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => TimelineTile(
-                    entry: dummyTimelineEntries[index],
-                    isFirst: index == 0,
-                    isLast: index == dummyTimelineEntries.length - 1,
-                  ),
-                  childCount: dummyTimelineEntries.length,
-                ),
-              ),
-            ] else ...[
               // ── Sort Header ──────────────────────────────────────
               SliverToBoxAdapter(child: _buildSortHeader()),
 
@@ -159,7 +145,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     childCount: _filteredApps.length,
                   ),
                 ),
-            ],
 
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
           ],
