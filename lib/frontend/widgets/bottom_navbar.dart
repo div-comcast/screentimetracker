@@ -38,7 +38,7 @@ class BottomNavBar extends StatelessWidget {
               ),
               _NavItem(
                 icon: Icons.bar_chart,
-                label: 'History',
+                label: 'Reports',
                 isActive: currentIndex == 1,
                 onTap: () => onTap(1),
               ),

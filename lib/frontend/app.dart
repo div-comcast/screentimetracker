@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
 import 'screens/dashboard.dart';
+import 'screens/reports.dart';
 import 'widgets/bottom_navbar.dart';
 
 /// Root widget — holds the bottom nav and swaps screens.
@@ -48,7 +49,7 @@ class _AppShellState extends State<_AppShell> {
       case 0:
         return const DashboardScreen();
       case 1:
-        return const _Placeholder(label: 'History');
+        return const ReportsScreen();
       case 2:
         return const _Placeholder(label: 'Focus');
       case 3:
