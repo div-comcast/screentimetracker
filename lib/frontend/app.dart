@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
 import 'screens/dashboard.dart';
+import 'screens/limits.dart';
 import 'screens/reports.dart';
 import 'screens/timeline.dart';
 import 'widgets/bottom_navbar.dart';
@@ -56,7 +57,7 @@ class _AppShellState extends State<_AppShell> {
       case 3:
         return const _Placeholder(label: 'Focus');
       case 4:
-        return const _Placeholder(label: 'Settings');
+        return const LimitsScreen();
       default:
         return const DashboardScreen();
     }
