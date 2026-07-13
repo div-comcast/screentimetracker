@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
 import 'screens/dashboard.dart';
+import 'screens/focus.dart';
 import 'screens/limits.dart';
 import 'screens/reports.dart';
 import 'screens/timeline.dart';
@@ -55,27 +56,11 @@ class _AppShellState extends State<_AppShell> {
       case 2:
         return const ReportsScreen();
       case 3:
-        return const _Placeholder(label: 'Focus');
+        return const FocusScreen();
       case 4:
         return const LimitsScreen();
       default:
         return const DashboardScreen();
     }
-  }
-}
-
-/// Placeholder for screens not yet built.
-class _Placeholder extends StatelessWidget {
-  final String label;
-  const _Placeholder({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        label,
-        style: AppTheme.headlineMedium.copyWith(color: AppTheme.textMuted),
-      ),
-    );
   }
 }

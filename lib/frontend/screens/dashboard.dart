@@ -193,8 +193,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           IconButton(
             onPressed: _canGoBack
                 ? () => setState(() {
-                      _startDate = _startDate.subtract(const Duration(days: 1));
-                      if (!_isRange) _endDate = _startDate;
+                      final newDate = _startDate.subtract(const Duration(days: 1));
+                      _startDate = newDate;
+                      _endDate = newDate;
                     })
                 : null,
             icon: Icon(Icons.chevron_left,
@@ -234,8 +235,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           IconButton(
             onPressed: _canGoForward
                 ? () => setState(() {
-                      _endDate = _endDate.add(const Duration(days: 1));
-                      if (!_isRange) _startDate = _endDate;
+                      final newDate = _endDate.add(const Duration(days: 1));
+                      _startDate = newDate;
+                      _endDate = newDate;
                     })
                 : null,
             icon: Icon(Icons.chevron_right,
