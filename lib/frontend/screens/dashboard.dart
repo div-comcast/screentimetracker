@@ -240,11 +240,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    _showCalendar ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                    color: Colors.white70, size: 18,
-                  ),
                 ],
               ),
             ),
