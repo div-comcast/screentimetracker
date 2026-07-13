@@ -17,6 +17,18 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedTab = 0;
+  String _selectedCategory = 'All';
+
+  // Backend categories from AppCategory enum
+  static const _categories = [
+    'All', 'Games', 'Audio', 'Videos', 'Photos',
+    'Social', 'News', 'Maps', 'Productivity', 'Other',
+  ];
+
+  List<DummyAppUsage> get _filteredApps {
+    if (_selectedTab != 1 || _selectedCategory == 'All') return dummyApps;
+    return dummyApps.where((a) => a.category == _selectedCategory).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,22 +84,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
               SliverToBoxAdapter(child: _buildSortHeader()),
 
               // ── App List ─────────────────────────────────────────
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => AppUsageTile(
-                    app: dummyApps[index],
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => SessionsScreen(app: dummyApps[index]),
-                        ),
+              if (_filteredApps.isEmpty)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 48),
+                    child: Center(
+                      child: Text(
+                        'No apps in this category',
+                        style: AppTheme.bodyMedium.copyWith(color: AppTheme.textMuted),
+                      ),
+                    ),
+                  ),
+                )
+              else
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final app = _filteredApps[index];
+                      return AppUsageTile(
+                        app: app,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => SessionsScreen(app: app),
+                            ),
+                          );
+                        },
                       );
                     },
+                    childCount: _filteredApps.length,
                   ),
-                  childCount: dummyApps.length,
                 ),
-              ),
             ],
 
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
@@ -181,7 +209,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  // ─── "Apps" label + "By Usage Time" sort ──────────────────────────
+  // ─── "Apps" label + "By Usage Time" sort + category filter ─────────
 
   Widget _buildSortHeader() {
     return Padding(
@@ -190,20 +218,117 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           const Text('Apps', style: AppTheme.headlineMedium),
           const Spacer(),
-          Row(
-            children: [
-              Text(
-                'By Usage Time',
-                style: AppTheme.bodyMedium.copyWith(
-                  fontWeight: FontWeight.w500,
+          if (_selectedTab == 1) ...[
+            GestureDetector(
+              onTap: _showCategorySheet,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: _selectedCategory == 'All'
+                      ? Colors.white
+                      : AppTheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: _selectedCategory == 'All'
+                        ? AppTheme.textMuted.withValues(alpha: 0.3)
+                        : AppTheme.primary.withValues(alpha: 0.4),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.filter_list, size: 16,
+                        color: _selectedCategory == 'All' ? AppTheme.textSecondary : AppTheme.primary),
+                    const SizedBox(width: 4),
+                    Text(
+                      _selectedCategory,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: _selectedCategory == 'All' ? AppTheme.textSecondary : AppTheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 2),
+                    Icon(Icons.keyboard_arrow_down, size: 16,
+                        color: _selectedCategory == 'All' ? AppTheme.textSecondary : AppTheme.primary),
+                  ],
                 ),
               ),
-              const SizedBox(width: 4),
-              const Icon(Icons.sort, size: 18, color: AppTheme.textSecondary),
-            ],
-          ),
+            ),
+          ] else ...[
+            Row(
+              children: [
+                Text(
+                  'By Usage Time',
+                  style: AppTheme.bodyMedium.copyWith(fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(width: 4),
+                const Icon(Icons.sort, size: 18, color: AppTheme.textSecondary),
+              ],
+            ),
+          ],
         ],
       ),
+    );
+  }
+
+  // ─── Category bottom sheet ────────────────────────────────────────
+
+  void _showCategorySheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 12),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppTheme.textMuted.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Filter by Category',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
+              ),
+              const SizedBox(height: 12),
+              ...(_categories.map((cat) {
+                final isSelected = cat == _selectedCategory;
+                return ListTile(
+                  leading: Icon(
+                    isSelected ? Icons.check_circle : Icons.circle_outlined,
+                    color: isSelected ? AppTheme.primary : AppTheme.textMuted,
+                    size: 22,
+                  ),
+                  title: Text(
+                    cat,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                      color: isSelected ? AppTheme.primary : AppTheme.textPrimary,
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() => _selectedCategory = cat);
+                    Navigator.pop(ctx);
+                  },
+                );
+              })),
+              SizedBox(height: MediaQuery.of(ctx).padding.bottom + 16),
+            ],
+          ),
+        );
+      },
     );
   }
 }
