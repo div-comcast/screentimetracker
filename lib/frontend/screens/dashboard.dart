@@ -17,7 +17,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedTab = 0;
-  int _reportViewIndex = 0; // 0 = Daily, 1 = Weekly
+  int _chartViewIndex = 0; // 0 = Hourly (Daily), 1 = Weekly
   String _selectedCategory = 'All';
   bool _showCalendar = false;
 
@@ -94,11 +94,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 SliverToBoxAdapter(child: _buildAppBar()),
 
                 const SliverToBoxAdapter(child: SizedBox(height: 16)),
-
-            // ── Daily / Weekly Toggle ────────────────────────────────
-            SliverToBoxAdapter(child: _buildReportToggle()),
-
-            const SliverToBoxAdapter(child: SizedBox(height: 12)),
 
             // ── KPI Card (daily or weekly) ───────────────────────────
             SliverToBoxAdapter(child: _buildKpiCard()),
@@ -755,147 +750,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  // ─── Daily / Weekly Toggle ──────────────────────────────────────────
-
-  Widget _buildReportToggle() {
-    final labels = ['Daily', 'Weekly'];
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: List.generate(labels.length, (i) {
-            final isSelected = i == _reportViewIndex;
-            return Expanded(
-              child: GestureDetector(
-                onTap: () => setState(() => _reportViewIndex = i),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppTheme.primary : Colors.transparent,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    labels[i],
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: isSelected ? Colors.white : AppTheme.textSecondary,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }),
-        ),
-      ),
-    );
-  }
-
-  // ─── KPI Card: Daily = existing card, Weekly = new weekly card ──────
+  // ─── KPI Card ──────────────────────────────────────────────────────
 
   Widget _buildKpiCard() {
-    if (_reportViewIndex == 0) {
-      return UsageSummaryCard(
-        kpi: dummyKpi,
-        donutSegments: dummyDonutSegments,
-        date: dummyDate,
-      );
-    }
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppTheme.primary,
-        borderRadius: AppTheme.cardRadius,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Total Time Used',
-                    style: TextStyle(color: Colors.white70, fontSize: 13)),
-                const SizedBox(height: 4),
-                const Text('38h 20m',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700)),
-                const SizedBox(height: 8),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.calendar_today,
-                          color: Colors.white70, size: 14),
-                      SizedBox(width: 4),
-                      Text('7 active days',
-                          style: TextStyle(
-                              color: Colors.white70, fontSize: 12)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _kpiMiniItem(Icons.trending_flat, 'Daily Avg', '5h 28m'),
-              const SizedBox(height: 10),
-              _kpiMiniItem(Icons.trending_up, 'Peak Day', '7h 50m'),
-              const SizedBox(height: 10),
-              _kpiMiniItem(Icons.sensors, 'Total Sessions', '2,814'),
-              const SizedBox(height: 10),
-              _kpiMiniItem(Icons.apps, 'Active Days', '7/7'),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _kpiMiniItem(IconData icon, String label, String value) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: Colors.white70, size: 14),
-        const SizedBox(width: 6),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label,
-                style: const TextStyle(color: Colors.white54, fontSize: 10)),
-            Text(value,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700)),
-          ],
-        ),
-      ],
+    return UsageSummaryCard(
+      kpi: dummyKpi,
+      donutSegments: dummyDonutSegments,
+      date: dummyDate,
     );
   }
 
@@ -915,7 +776,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Row(
             children: [
               Text(
-                _reportViewIndex == 0
+                _chartViewIndex == 0
                     ? 'Hourly Usage Overview'
                     : 'Daily Usage Overview',
                 style: const TextStyle(
@@ -924,54 +785,55 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     color: AppTheme.textPrimary),
               ),
               const Spacer(),
-              _chartToggle(),
+              Container(
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  color: AppTheme.scaffoldBg,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: ['Daily', 'Weekly'].asMap().entries.map((e) {
+                    final isSelected = e.key == _chartViewIndex;
+                    return GestureDetector(
+                      onTap: () => setState(() => _chartViewIndex = e.key),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppTheme.primary
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: Text(
+                          e.value,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: isSelected
+                                ? Colors.white
+                                : AppTheme.textSecondary,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 20),
           SizedBox(
             height: 160,
-            child: _reportViewIndex == 0
+            child: _chartViewIndex == 0
                 ? _hourlyBarChart()
                 : _weeklyBarChart(),
           ),
           const SizedBox(height: 8),
           _chartLabels(),
         ],
-      ),
-    );
-  }
-
-  Widget _chartToggle() {
-    return Container(
-      padding: const EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        color: AppTheme.scaffoldBg,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _chartToggleBtn('Time Used', true),
-          _chartToggleBtn('Sessions', false),
-        ],
-      ),
-    );
-  }
-
-  Widget _chartToggleBtn(String label, bool isActive) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: isActive ? AppTheme.primary : Colors.transparent,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: isActive ? Colors.white : AppTheme.textSecondary,
-        ),
       ),
     );
   }
@@ -1073,7 +935,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _chartLabels() {
-    final labels = _reportViewIndex == 0
+    final labels = _chartViewIndex == 0
         ? ['8 AM', '10 AM', '12 PM', '2 PM', '4 PM', '6 PM', '8 PM', '10 PM', '12 AM']
         : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     return Row(
