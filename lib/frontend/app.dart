@@ -3,7 +3,6 @@ import 'theme/app_theme.dart';
 import 'screens/dashboard.dart';
 import 'screens/focus.dart';
 import 'screens/limits.dart';
-import 'screens/reports.dart';
 import 'screens/timeline.dart';
 import 'widgets/bottom_navbar.dart';
 
@@ -54,10 +53,8 @@ class _AppShellState extends State<_AppShell> {
       case 1:
         return TimelineScreen();
       case 2:
-        return const ReportsScreen();
-      case 3:
         return const FocusScreen();
-      case 4:
+      case 3:
         return const LimitsScreen();
       default:
         return const DashboardScreen();
