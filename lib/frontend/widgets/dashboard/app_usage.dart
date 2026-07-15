@@ -346,6 +346,8 @@ class _AppRow extends StatelessWidget {
           ),
         ],
       ),
+        ),
+      ),
     );
   }
 
