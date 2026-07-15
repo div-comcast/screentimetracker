@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import '../utils.dart';
 
 
-enum AppSortOrder { byTime, byVisits }
+enum AppSortOrder { byTime, bySessions }
 
 enum AppCategory {
   all,

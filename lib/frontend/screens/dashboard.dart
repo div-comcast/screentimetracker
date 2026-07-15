@@ -5,6 +5,7 @@ import '../widgets/calendar.dart';
 import '../widgets/date_rangebar.dart';
 import '../widgets/dashboard/kpi_card.dart';
 import '../widgets/dashboard/chart_section.dart';
+import '../widgets/dashboard/app_usage.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -69,28 +70,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ScreenTimeHeader(onCalendarTap: _openCalendar),
-            DateBar(
-              start: _selectedStart,
-              end: _selectedStart == _selectedEnd ? null : _selectedEnd,
-              onTap: _openCalendar,
-              onBack: _canGoBack ? _shiftBack : null,
-              onForward: _canGoForward ? _shiftForward : null,
-            ),
-            const SizedBox(height: 12),
-            KpiCard(
-              start: _selectedStart,
-              end: _selectedEnd,
-            ),
-            const SizedBox(height: 20),
-            ChartSection(
-              start: _selectedStart,
-              end: _selectedEnd,
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ScreenTimeHeader(onCalendarTap: _openCalendar),
+              DateBar(
+                start: _selectedStart,
+                end: _selectedStart == _selectedEnd ? null : _selectedEnd,
+                onTap: _openCalendar,
+                onBack: _canGoBack ? _shiftBack : null,
+                onForward: _canGoForward ? _shiftForward : null,
+              ),
+              const SizedBox(height: 12),
+              KpiCard(
+                start: _selectedStart,
+                end: _selectedEnd,
+              ),
+              const SizedBox(height: 20),
+              ChartSection(
+                start: _selectedStart,
+                end: _selectedEnd,
+              ),
+              const SizedBox(height: 24),
+              AppUsageSection(
+                start: _selectedStart,
+                end: _selectedEnd,
+              ),
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );
