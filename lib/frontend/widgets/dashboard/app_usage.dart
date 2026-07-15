@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../backend/domains/usage/reports.dart';
 import '../../../backend/domains/usage/schema.dart';
 import '../../theme/app_theme.dart';
+import 'app_sessions.dart';
 
 class AppUsageSection extends StatefulWidget {
   final DateTime start;
@@ -73,7 +74,20 @@ class _AppUsageSectionState extends State<AppUsageSection> {
               if (apps.isEmpty) return _buildEmpty();
               return Column(
                 children: apps
-                    .map((app) => _AppRow(app: app, fmtMs: _fmtMs))
+                    .map((app) => _AppRow(
+                          app: app,
+                          fmtMs: _fmtMs,
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => AppSessionsScreen(
+                                app: app,
+                                start: widget.start,
+                                end: widget.end,
+                              ),
+                            ),
+                          ),
+                        ))
                     .toList(),
               );
             },
@@ -229,6 +243,7 @@ class _AppUsageSectionState extends State<AppUsageSection> {
 class _AppRow extends StatelessWidget {
   final AppDailyRecord app;
   final String Function(int) fmtMs;
+  final VoidCallback? onTap;
 
   static const _fallbackColors = [
     Color(0xFFE8553E),
@@ -241,16 +256,21 @@ class _AppRow extends StatelessWidget {
     Color(0xFF000000),
   ];
 
-  const _AppRow({required this.app, required this.fmtMs});
+  const _AppRow({required this.app, required this.fmtMs, this.onTap});
 
   Color get _iconBg =>
       _fallbackColors[app.appName.hashCode.abs() % _fallbackColors.length];
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
         children: [
           _buildIcon(),
           const SizedBox(width: 12),
