@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 import '../widgets/header.dart';
 import '../widgets/calendar.dart';
 import '../widgets/date_rangebar.dart';
+import '../widgets/dashboard/kpi_card.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -77,6 +78,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               onTap: _openCalendar,
               onBack: _canGoBack ? _shiftBack : null,
               onForward: _canGoForward ? _shiftForward : null,
+            ),
+            const SizedBox(height: 12),
+            KpiCard(
+              start: _selectedStart,
+              end: _selectedEnd,
             ),
           ],
         ),
