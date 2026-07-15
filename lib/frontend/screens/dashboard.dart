@@ -4,6 +4,7 @@ import '../widgets/header.dart';
 import '../widgets/calendar.dart';
 import '../widgets/date_rangebar.dart';
 import '../widgets/dashboard/kpi_card.dart';
+import '../widgets/dashboard/chart_section.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -81,6 +82,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             const SizedBox(height: 12),
             KpiCard(
+              start: _selectedStart,
+              end: _selectedEnd,
+            ),
+            const SizedBox(height: 20),
+            ChartSection(
               start: _selectedStart,
               end: _selectedEnd,
             ),
