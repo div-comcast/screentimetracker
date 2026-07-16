@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/dashboard.dart';
+import 'screens/loading_screen.dart';
 
 class ScreenTimeTrackerApp extends StatelessWidget {
   const ScreenTimeTrackerApp({super.key});
@@ -9,7 +10,7 @@ class ScreenTimeTrackerApp extends StatelessWidget {
     return MaterialApp(
       title: 'Screen Time Tracker',
       debugShowCheckedModeBanner: false,
-      home: const DashboardScreen(),
+      home: const LoadingScreen(child: DashboardScreen()),
     );
   }
 }

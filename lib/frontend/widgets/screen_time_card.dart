@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../backend/bridge/cache_data.dart';
 import '../../backend/domains/usage/reports.dart';
 import '../../backend/domains/usage/schema.dart';
 import 'calendar.dart';
@@ -46,8 +45,6 @@ class _ScreenTimeCardState extends State<ScreenTimeCard> {
       _noData = false;
     });
     try {
-      await fetchRawCache(startDate: start, endDate: end ?? start);
-
       final daily = await getDailyUsageReport(
         startDate: start,
         endDate: end,
