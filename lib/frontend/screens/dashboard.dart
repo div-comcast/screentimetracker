@@ -28,30 +28,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
               // ── Top Header ──────────────────────────────────────────────
               TopHeader(
                 userName: 'Celeste',
-                onSettingsTap: () {
-                  // TODO: navigate to settings
-                },
+                onSettingsTap: () {},
               ),
               const SizedBox(height: 4),
 
-              // ── Screen Time Card ────────────────────────────────────────
+              // ── White Screen Time Card ──────────────────────────────────
               ScreenTimeCard(
                 onReportLoaded: (report) {
                   if (mounted) setState(() => _report = report);
                 },
               ),
-              const SizedBox(height: 16),
 
-              // ── Focus Score Card ────────────────────────────────────────
-              FocusScoreCard(report: _report),
-              const SizedBox(height: 20),
+              // ── Yellow Focus Score Card (overlaps white by ~40px) ────────
+              Transform.translate(
+                offset: const Offset(0, -40),
+                child: FocusScoreCard(report: _report),
+              ),
 
-              // ── Start Focus Session Button ───────────────────────────────
-              FocusSessionButton(
-                lastSession: 'Last session: 2 hours ago',
-                onTap: () {
-                  // TODO: start focus session screen
-                },
+              // ── Button ──────────────────────────────────────────────────
+              Transform.translate(
+                offset: const Offset(0, -28),
+                child: FocusSessionButton(
+                  lastSession: 'Last session: 2 hours ago',
+                  onTap: () {
+                    // TODO: start focus session screen
+                  },
+                ),
               ),
             ],
           ),
