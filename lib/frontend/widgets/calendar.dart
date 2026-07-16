@@ -82,9 +82,33 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   }
 
   String get _pillLabel {
-    if (_rangeStart == null) return 'Select date';
+    if (_rangeStart == null) return _formatShort(_maxDate);
     if (_rangeEnd == null) return _formatShort(_rangeStart!);
     return '${_formatShort(_rangeStart!)} – ${_formatShort(_rangeEnd!)}';
+  }
+
+  bool get _isRange => _rangeEnd != null;
+
+  bool get _canGoBack {
+    final current = _rangeStart ?? _maxDate;
+    return !current.isAtSameMomentAs(_minDate) && !current.isBefore(_minDate);
+  }
+
+  bool get _canGoForward {
+    final current = _rangeStart ?? _maxDate;
+    return current.isBefore(_maxDate);
+  }
+
+  void _stepDay(int delta) {
+    final current = _rangeStart ?? _maxDate;
+    final next = current.add(Duration(days: delta));
+    if (next.isBefore(_minDate) || next.isAfter(_maxDate)) return;
+    setState(() {
+      _rangeStart = next;
+      _rangeEnd = null;
+      _displayedMonth = DateTime(next.year, next.month);
+    });
+    widget.onDateSelected?.call(next);
   }
 
   void _onDateTap(DateTime date, StateSetter setSheetState) {
@@ -125,31 +149,62 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
+        // ← back arrow
+        _arrowButton(
+          icon: Icons.chevron_left_rounded,
+          enabled: _canGoBack && !_isRange,
+          onTap: () => _stepDay(-1),
+        ),
+
+        const SizedBox(width: 4),
+
+        // Date label (tap opens calendar)
         GestureDetector(
           onTap: () => _showCalendarSheet(context),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
             decoration: BoxDecoration(
               color: Colors.transparent,
               borderRadius: BorderRadius.circular(50),
               border: Border.all(color: const Color(0xFFCCCCCC), width: 1.2),
             ),
-            child: Text(
-              _pillLabel,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF1A1A1A),
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _pillLabel,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF1A1A1A),
+                  ),
+                ),
+                if (_isRange) ...[
+                  const SizedBox(width: 6),
+                  const Icon(Icons.close_rounded, size: 14, color: Color(0xFF999999)),
+                ],
+              ],
             ),
           ),
         ),
-        const SizedBox(width: 8),
+
+        const SizedBox(width: 4),
+
+        // → forward arrow
+        _arrowButton(
+          icon: Icons.chevron_right_rounded,
+          enabled: _canGoForward && !_isRange,
+          onTap: () => _stepDay(1),
+        ),
+
+        const SizedBox(width: 6),
+
+        // Calendar icon
         GestureDetector(
           onTap: () => _showCalendarSheet(context),
           child: Container(
-            width: 40,
-            height: 40,
+            width: 38,
+            height: 38,
             decoration: BoxDecoration(
               color: Colors.transparent,
               shape: BoxShape.circle,
@@ -157,12 +212,29 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             ),
             child: const Icon(
               Icons.calendar_month_outlined,
-              size: 18,
+              size: 17,
               color: Color(0xFF1A1A1A),
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _arrowButton({
+    required IconData icon,
+    required bool enabled,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: enabled ? onTap : null,
+      child: Icon(
+        icon,
+        size: 22,
+        color: enabled
+            ? const Color(0xFF1A1A1A)
+            : const Color(0xFFCCCCCC),
+      ),
     );
   }
 
