@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../backend/domains/usage/schema.dart';
+import '../screens/applications_screen.dart';
 
 class FocusScoreCard extends StatelessWidget {
   final DailyUsageReport? report;
@@ -105,18 +106,30 @@ class FocusScoreCard extends StatelessWidget {
               const Spacer(),
 
               // Most-used app icons
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  _topApps.isEmpty
-                      ? const SizedBox(height: 40)
-                      : _AppIconStack(apps: _topApps),
-                  const SizedBox(height: 5),
-                  const Text(
-                    'Most used',
-                    style: TextStyle(fontSize: 12, color: Color(0xFF888888)),
-                  ),
-                ],
+              GestureDetector(
+                onTap: () {
+                  if (report != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ApplicationsScreen(report: report!),
+                      ),
+                    );
+                  }
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    _topApps.isEmpty
+                        ? const SizedBox(height: 40)
+                        : _AppIconStack(apps: _topApps),
+                    const SizedBox(height: 5),
+                    const Text(
+                      'Most used',
+                      style: TextStyle(fontSize: 12, color: Color(0xFF888888)),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -184,9 +197,7 @@ class _AppIconStack extends StatelessWidget {
           for (int i = 0; i < apps.length; i++)
             Positioned(
               left: i * (_size - _overlap),
-              child: GestureDetector(
-                onTap: () => _showAppDetail(context, apps[i]),
-                child: Container(
+              child: Container(
                   width: _size,
                   height: _size,
                   decoration: BoxDecoration(
@@ -200,11 +211,10 @@ class _AppIconStack extends StatelessWidget {
                     child: Image.memory(
                       apps[i].appIcon!,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => _fallback(apps[i].appName),
+                      errorBuilder: (_, _, _) => _fallback(apps[i].appName),
                     ),
                   ),
                 ),
-              ),
             ),
         ],
       ),
@@ -221,118 +231,6 @@ class _AppIconStack extends StatelessWidget {
               fontWeight: FontWeight.w700,
               color: Color(0xFF777777),
             ),
-          ),
-        ),
-      );
-
-  void _showAppDetail(BuildContext context, AppDailyRecord app) {
-    final totalMin = app.actualTimeUsed ~/ 60000;
-    final h = totalMin ~/ 60;
-    final m = totalMin % 60;
-    final timeStr = h > 0 ? '${h}h ${m}m' : '${m}m';
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (_) => Padding(
-        padding: const EdgeInsets.fromLTRB(24, 20, 24, 36),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle
-            Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Icon + name
-            Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.memory(
-                    app.appIcon!,
-                    width: 56,
-                    height: 56,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        app.appName,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A1A1A),
-                        ),
-                      ),
-                      Text(
-                        app.category,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF888888),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            // Stats row
-            Row(
-              children: [
-                _statTile('Screen time', timeStr),
-                const SizedBox(width: 12),
-                _statTile('Sessions', '${app.sessionCount}'),
-                const SizedBox(width: 12),
-                _statTile('Share', '${app.usagePercentage.toStringAsFixed(1)}%'),
-              ],
-            ),
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _statTile(String label, String value) => Expanded(
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF2EDE4),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            children: [
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A1A),
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: Color(0xFF888888),
-                ),
-              ),
-            ],
           ),
         ),
       );
