@@ -98,17 +98,26 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         if (date.isBefore(_rangeStart!)) {
           _rangeEnd = _rangeStart;
           _rangeStart = date;
+        } else if (_isSameDay(date, _rangeStart!)) {
+          // Same day tapped twice → single date selection
+          _rangeEnd = null;
         } else {
           _rangeEnd = date;
         }
-        setState(() {});
-        widget.onRangeSelected?.call(_rangeStart!, _rangeEnd!);
-        widget.onDateSelected?.call(_rangeStart!);
-        Navigator.of(context).pop();
       }
     });
 
     setState(() {});
+  }
+
+  void _applySelection() {
+    if (_rangeStart == null) return;
+    setState(() {});
+    if (_rangeEnd != null) {
+      widget.onRangeSelected?.call(_rangeStart!, _rangeEnd!);
+    }
+    widget.onDateSelected?.call(_rangeStart!);
+    Navigator.of(context).pop();
   }
 
   // ── Date pill ─────────────────────────────────────────────────────────────
@@ -168,7 +177,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       builder: (_) {
         return StatefulBuilder(
           builder: (ctx, setSheetState) {
-            return Padding(
+            return SingleChildScrollView(
+              child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -268,8 +278,37 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   const SizedBox(height: 6),
 
                   _buildDateGrid(setSheetState),
+
+                  const SizedBox(height: 20),
+
+                  // Apply button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: _rangeStart != null ? _applySelection : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE87070),
+                        disabledBackgroundColor: const Color(0xFFE0D6CA),
+                        foregroundColor: Colors.white,
+                        disabledForegroundColor: Colors.white60,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: const Text(
+                        'Apply',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
+            ),
             );
           },
         );
