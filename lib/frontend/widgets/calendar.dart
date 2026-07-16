@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class CalendarWidget extends StatefulWidget {
   final DateTime? initialDate;
+  final DateTime? initialEndDate;
   final ValueChanged<DateTime>? onDateSelected;
   final void Function(DateTime start, DateTime end)? onRangeSelected;
 
   const CalendarWidget({
     super.key,
     this.initialDate,
+    this.initialEndDate,
     this.onDateSelected,
     this.onRangeSelected,
   });
@@ -43,6 +45,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         ? _clamp(widget.initialDate!)
         : _maxDate;
     _rangeStart = init;
+    _rangeEnd = widget.initialEndDate != null
+        ? _clamp(widget.initialEndDate!)
+        : null;
     _displayedMonth = DateTime(init.year, init.month);
   }
 

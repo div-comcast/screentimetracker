@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
+import '../../backend/domains/usage/schema.dart';
 import '../widgets/top_header.dart';
-import '../widgets/calendar.dart';
+import '../widgets/screen_time_card.dart';
+import '../widgets/focus_score_card.dart';
+import '../widgets/focus_session_button.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  DailyUsageReport? _report;
 
   @override
   Widget build(BuildContext context) {
@@ -11,6 +21,7 @@ class DashboardScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFF2EDE4),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -21,48 +32,27 @@ class DashboardScreen extends StatelessWidget {
                   // TODO: navigate to settings
                 },
               ),
+              const SizedBox(height: 4),
 
-              // ── Remaining dashboard sections go here ────────────────────
-              // ── Calendar Card ───────────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.06),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'SCREEN TIME',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A1A1A),
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                      CalendarWidget(
-                        initialDate: DateTime.now(),
-                        onDateSelected: (date) {
-                          // TODO: filter data by selected date
-                        },
-                      ),
-                    ],
-                  ),
-                ),
+              // ── Screen Time Card ────────────────────────────────────────
+              ScreenTimeCard(
+                onReportLoaded: (report) {
+                  if (mounted) setState(() => _report = report);
+                },
               ),
               const SizedBox(height: 16),
+
+              // ── Focus Score Card ────────────────────────────────────────
+              FocusScoreCard(report: _report),
+              const SizedBox(height: 20),
+
+              // ── Start Focus Session Button ───────────────────────────────
+              FocusSessionButton(
+                lastSession: 'Last session: 2 hours ago',
+                onTap: () {
+                  // TODO: start focus session screen
+                },
+              ),
             ],
           ),
         ),
@@ -70,3 +60,4 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 }
+
